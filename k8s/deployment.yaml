@@ -1,19 +1,18 @@
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: autoguard-api
-spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      app: autoguard
-  template:
-    metadata:
-      labels:
-        app: autoguard
-    spec:
-      containers:
-        - name: api
-          image: autoguard-api:latest
-          ports:
-            - containerPort: 8000
+name: Deploy to Kubernetes
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v4
+
+      - name: Deploy Helm Chart
+        run: |
+          helm upgrade --install autoguard ./helm/autoguard
