@@ -1,0 +1,57 @@
+AutoGuard-AI/
+│
+├── perception/
+│   ├── pytorch_model.py
+│   ├── tensorflow_model.py
+│   ├── train.py
+│   ├── infer.py
+│   └── cuda_utils.py
+│
+├── risk_engine_cpp/
+│   ├── CMakeLists.txt
+│   ├── risk_engine.cpp
+│   ├── risk_engine.h
+│   └── bindings.cpp
+│
+├── api/
+│   ├── main.py
+│   ├── geofence.py
+│   ├── schemas.py
+│   └── requirements.txt
+│
+├── dashboard/
+│   ├── streamlit_app.py
+│
+├── mlops/
+│   ├── mlflow_tracking.py
+│   ├── prometheus_metrics.py
+│
+├── k8s/
+│   ├── deployment.yaml
+│   ├── service.yaml
+│   ├── prometheus.yaml
+│
+├── helm/
+│   ├── Chart.yaml
+│   ├── values.yaml
+│   └── templates/
+│
+├── docker/
+│   ├── Dockerfile.api
+│   ├── Dockerfile.perception
+│   ├── docker-compose.yml
+│
+├── .github/
+│   └── workflows/
+│       └── ci.yml
+│
+├── tests/
+│   ├── test_api.py
+│   ├── test_models.py
+│
+├── data/
+│   └── simulated_sensor_data.csv
+│
+├── metrics.md
+├── requirements.txt
+└── README.md   ← (Delivered last)
