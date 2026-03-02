@@ -11,12 +11,16 @@
 
 
 
-🚗 AutoGuard-X
-
-Enterprise Autonomous Vehicle Safety Intelligence Platform
 
 
- Platform & Engineering Badges
+# 🚗 AutoGuard-AI Autonomous Vehicle Safety Platform
+
+![CI](https://github.com/Trojan3877/AutoGuard-AI-Real-Time-Autonomous-Vehicle-Safety-Geofencing-Platform/actions/workflows/ci.yml/badge.svg)
+![Coverage](https://codecov.io/gh/Trojan3877/AutoGuard-AI-Real-Time-Autonomous-Vehicle-Safety-Geofencing-Platform/branch/main/graph/badge.svg)
+![DockerHub](https://img.shields.io/docker/pulls/trojan3877/autoguard-ai)
+![Docker Version](https://img.shields.io/docker/v/trojan3877/autoguard-ai)
+![Helm Chart](https://img.shields.io/badge/helm-v1.0.0-blue)
+![License](https://img.shields.io/github/license/Trojan3877/AutoGuard-AI-Real-Time-Autonomous-Vehicle-Safety-Geofencing-Platform)
 
 ![Architecture-L6](https://img.shields.io/badge/Architecture-L6%20Enterprise-black)
 ![Domain-Autonomous%20Vehicles](https://img.shields.io/badge/Domain-Autonomous%20Vehicles-darkgreen)
