@@ -25,8 +25,11 @@ Enterprise Autonomous Vehicle Safety Intelligence Platform
 ![Observability-Enabled](https://img.shields.io/badge/Observability-Prometheus-yellow)
 ![CI/CD-GitHub%20Actions](https://img.shields.io/badge/CI/CD-GitHub%20Actions-blue)
 
-
-
+![CI](https://github.com/Trojan3877/AutoGuard-AI-Real-Time-Autonomous-Vehicle-Safety-Geofencing-Platform/actions/workflows/ci.yml/badge.svg)
+![Coverage](https://codecov.io/gh/Trojan3877/AutoGuard-AI-Real-Time-Autonomous-Vehicle-Safety-Geofencing-Platform/branch/main/graph/badge.svg)
+![DockerHub](https://img.shields.io/docker/pulls/trojan3877/autoguard-ai)
+![Docker Version](https://img.shields.io/docker/v/trojan3877/autoguard-ai)
+helm/autoguard/
 AI & ML Stack
 
 ![PyTorch-VisionTransformer](https://img.shields.io/badge/PyTorch-Vision%20Transformer-red)
