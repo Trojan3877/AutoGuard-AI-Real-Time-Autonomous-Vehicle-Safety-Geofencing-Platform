@@ -14,7 +14,8 @@
 
 
 # 🚗 AutoGuard-AI Autonomous Vehicle Safety Platform
-
+![Kubernetes](https://img.shields.io/badge/Kubernetes-Deployed-green)
+![SonarCloud](https://sonarcloud.io/api/project_badges/measure?project=YOUR_PROJECT_KEY&metric=alert_status)
 ![CI](https://github.com/Trojan3877/AutoGuard-AI-Real-Time-Autonomous-Vehicle-Safety-Geofencing-Platform/actions/workflows/ci.yml/badge.svg)
 ![Coverage](https://codecov.io/gh/Trojan3877/AutoGuard-AI-Real-Time-Autonomous-Vehicle-Safety-Geofencing-Platform/branch/main/graph/badge.svg)
 ![DockerHub](https://img.shields.io/docker/pulls/trojan3877/autoguard-ai)
