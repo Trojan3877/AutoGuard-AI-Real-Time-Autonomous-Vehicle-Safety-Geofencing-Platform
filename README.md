@@ -8,7 +8,11 @@
 <img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/23e100bf-9086-4e91-90db-6886e34ec1d6" />
 
 
+Enterprise Autonomous Vehicle Safety & Geofencing Platform
 
+AutoGuard-AI is a production-oriented, cloud-native autonomous vehicle safety intelligence platform designed to simulate real-world deployment patterns used in modern autonomous driving systems.
+
+The platform integrates transformer-based perception models, reinforcement learning policy optimization, anomaly detection for driver fatigue, geospatial boundary enforcement via Google Maps APIs, and enterprise-grade MLOps infrastructure. It is architected using a modular microservices design and deployed through Docker, Kubernetes, and Helm, with full CI/CD, observability, and security scanning.
 
 
 
