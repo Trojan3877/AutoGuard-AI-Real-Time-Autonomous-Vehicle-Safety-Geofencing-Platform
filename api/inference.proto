@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+service InferenceService {
+  rpc Predict (TelemetryRequest) returns (PredictionResponse);
+}
+
+message TelemetryRequest {
+  float speed = 1;
+  float latitude = 2;
+  float longitude = 3;
+}
+
+message PredictionResponse {
+  string status = 1;
+  float confidence = 2;
+}
