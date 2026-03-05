@@ -8,7 +8,7 @@
 <img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/23e100bf-9086-4e91-90db-6886e34ec1d6" />
 
 
-# 🚗 AutoGuard AI – Real-Time Autonomous Vehicle Safety & Geofencing Platform
+AutoGuard AI – Real-Time Autonomous Vehicle Safety & Geofencing Platform
 
 ![CI](https://github.com/Trojan3877/AutoGuard-AI-Real-Time-Autonomous-Vehicle-Safety-Geofencing-Platform/actions/workflows/ci.yml/badge.svg)
 ![Docker](https://img.shields.io/badge/Docker-Containerized-2496ED?logo=docker&logoColor=white)
@@ -17,9 +17,9 @@
 ![Security Scan](https://img.shields.io/badge/Security-Scanned-red)
 ![License](https://img.shields.io/github/license/Trojan3877/AutoGuard-AI-Real-Time-Autonomous-Vehicle-Safety-Geofencing-Platform)
 
----
 
-## 🚀 Overview
+
+Overview
 
 AutoGuard AI is a production-oriented autonomous vehicle safety platform integrating:
 
@@ -31,27 +31,29 @@ AutoGuard AI is a production-oriented autonomous vehicle safety platform integra
 - Model registry versioning
 - Containerized + Kubernetes-ready deployment
 
----
 
-## 🏗 Architecture Flow
-Camera Sensors / Telemetry
-↓
-Transformer Perception Model
-↓
-Geofence Logic + Fatigue Detection
-↓
-RL Safety Simulation
-↓
-FastAPI Inference Layer
-↓
+
+Architecture Flow
+Kafka Telemetry Stream
+        ↓
+Streaming Consumer
+        ↓
+Transformer Perception
+        ↓
+Fatigue CNN + EAR Metric
+        ↓
+Google Maps Geofence Logic
+        ↓
+Distributed Inference Router
+        ↓
 Prometheus Monitoring
-↓
-Kubernetes Deployment
+        ↓
+Kubernetes Scaling
 
 
----
 
-## 📊 Performance Metrics
+
+Performance Metrics
 
 | Metric | Value |
 |--------|-------|
@@ -62,9 +64,9 @@ Kubernetes Deployment
 | RL Collision Reduction | 27% |
 | Drift Sensitivity | 0.92 |
 
----
 
-## 📂 Project Structure
+
+Project Structure
 models/
 simulation/
 pipelines/
@@ -97,9 +99,9 @@ Run Simulation
 python simulation/rl_environment.py
 
 
----
 
-## 🔒 Security & Reliability
+
+Security & Reliability
 
 - Trivy container scanning
 - SBOM generation
@@ -107,9 +109,9 @@ python simulation/rl_environment.py
 - Prometheus metrics
 - CI/CD automated testing
 
----
 
-## 📈 Enterprise Features
+
+Enterprise Features
 
 - Vision Transformer perception
 - Reinforcement learning environment
