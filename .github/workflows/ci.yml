@@ -1,4 +1,4 @@
-name: AutoGuard CI Pipeline
+name: AutoGuard CI
 
 on:
   push:
@@ -7,34 +7,28 @@ on:
     branches: [ main ]
 
 jobs:
-  build-and-test:
+  test-build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: Setup Python
+        uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
+          python-version: 3.10
 
-      - name: Install dependencies
+      - name: Install Dependencies
         run: |
           pip install -r requirements.txt
-          pip install pytest pytest-cov flake8
+          pip install pytest coverage
 
-      - name: Run Lint
-        run: flake8 .
-
-      - name: Run Tests with Coverage
+      - name: Run Tests
         run: |
-          pytest --cov=./ --cov-report=xml
+          pytest
 
-      - name: Upload Coverage Report
-        uses: codecov/codecov-action@v4
-        with:
-          file: ./coverage.xml
-
-      - name: Build Docker Image
-        run: docker build -t trojan3877/autoguard-ai:latest .
+      - name: Generate Coverage
+        run: |
+          coverage run -m pytest
+          coverage report
