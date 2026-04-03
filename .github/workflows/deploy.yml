@@ -2,10 +2,26 @@ name: Deploy to Kubernetes
 
 on:
   workflow_dispatch:
+    inputs:
+      environment:
+        description: "Target environment (dev / staging / prod)"
+        required: true
+        default: "prod"
+        type: choice
+        options:
+          - dev
+          - staging
+          - prod
+      image_tag:
+        description: "Docker image tag to deploy (defaults to latest)"
+        required: false
+        default: "latest"
 
 jobs:
   deploy:
+    name: Helm deploy – ${{ inputs.environment }}
     runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
     permissions:
       contents: read
 
@@ -15,6 +31,24 @@ jobs:
       - name: Setup kubectl
         uses: azure/setup-kubectl@v4
 
+      - name: Setup Helm
+        uses: azure/setup-helm@v4
+
+      - name: Configure kubeconfig
+        run: |
+          mkdir -p ~/.kube
+          echo "${{ secrets.KUBECONFIG }}" | base64 -d > ~/.kube/config
+          chmod 600 ~/.kube/config
+
+      - name: Ensure namespace exists
+        run: kubectl get namespace autoguard || kubectl create namespace autoguard
+
       - name: Deploy Helm Chart
         run: |
-          helm upgrade --install autoguard ./infra/helm/autoguard
+          helm upgrade --install autoguard ./infra/helm/autoguard \
+            --namespace autoguard \
+            --set image.tag="${{ inputs.image_tag }}" \
+            --set env.LOG_LEVEL=INFO \
+            --atomic \
+            --timeout 5m \
+            --wait

@@ -1,0 +1,14 @@
+[flake8]
+max-line-length = 120
+# E302/E305: blank-line conventions – widespread pre-existing style in this codebase
+# E402: module-level import not at top of file – test files manipulate sys.path first
+# F401: imported but unused – several model/perception modules import for side-effects
+extend-ignore = E302,E305,E402,F401
+exclude =
+    .git,
+    __pycache__,
+    .venv,
+    venv,
+    build,
+    dist,
+    libs/risk-engine-cpp,

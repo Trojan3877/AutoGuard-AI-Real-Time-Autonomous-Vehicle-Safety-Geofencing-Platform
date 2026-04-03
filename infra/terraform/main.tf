@@ -1,16 +1,31 @@
 provider "aws" {
-  region = "us-east-1"
+  region = var.aws_region
 }
 
 resource "aws_ecr_repository" "autoguard" {
-  name = "autoguard-ai"
+  name                 = var.ecr_repository_name
+  image_tag_mutability = "MUTABLE"
+
+  image_scanning_configuration {
+    scan_on_push = true
+  }
+
+  tags = {
+    Environment = var.environment
+    Project     = "autoguard-ai"
+  }
 }
 
 resource "aws_eks_cluster" "autoguard_cluster" {
-  name     = "autoguard-eks"
-  role_arn = "arn:aws:iam::123456789012:role/EKSRole"
+  name     = var.cluster_name
+  role_arn = var.eks_role_arn
 
   vpc_config {
-    subnet_ids = ["subnet-abc123"]
+    subnet_ids = var.eks_subnet_ids
+  }
+
+  tags = {
+    Environment = var.environment
+    Project     = "autoguard-ai"
   }
 }

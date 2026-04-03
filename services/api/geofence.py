@@ -1,8 +1,13 @@
+import os
+
 import requests
 
-GOOGLE_API_KEY = "YOUR_KEY"
+GOOGLE_API_KEY = os.environ.get("GOOGLE_API_KEY", "")
+
 
 def check_geofence(lat, lon):
+    if not GOOGLE_API_KEY:
+        return False
     url = f"https://maps.googleapis.com/maps/api/geocode/json?latlng={lat},{lon}&key={GOOGLE_API_KEY}"
     try:
         response = requests.get(url, timeout=5)
