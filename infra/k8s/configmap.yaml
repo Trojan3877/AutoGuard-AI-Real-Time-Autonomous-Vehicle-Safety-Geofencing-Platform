@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: autoguard-config
+  namespace: autoguard
+  labels:
+    app: autoguard-api
+data:
+  LOG_LEVEL: "INFO"
+  REDIS_HOST: "redis"
+  REDIS_PORT: "6379"
+  KAFKA_BOOTSTRAP_SERVERS: "kafka:9092"

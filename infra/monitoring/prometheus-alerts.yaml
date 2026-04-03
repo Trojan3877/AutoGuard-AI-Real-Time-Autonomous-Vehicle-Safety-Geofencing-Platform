@@ -1,0 +1,90 @@
+groups:
+  - name: autoguard.api
+    rules:
+      - alert: HighRequestErrorRate
+        expr: |
+          rate(autoguard_api_requests_total{status=~"5.."}[5m]) /
+          rate(autoguard_api_requests_total[5m]) > 0.05
+        for: 2m
+        labels:
+          severity: critical
+          team: autoguard
+        annotations:
+          summary: "High API error rate (>5%)"
+          description: "Error rate is {{ $value | humanizePercentage }} over the last 5 minutes."
+
+      - alert: HighInferenceLatency
+        expr: histogram_quantile(0.99, rate(autoguard_inference_latency_seconds_bucket[5m])) > 0.5
+        for: 5m
+        labels:
+          severity: warning
+          team: autoguard
+        annotations:
+          summary: "p99 inference latency > 500 ms"
+          description: "p99 latency is {{ $value | humanizeDuration }}."
+
+      - alert: GeofenceViolationSpike
+        expr: rate(autoguard_geofence_violations_total[5m]) > 10
+        for: 1m
+        labels:
+          severity: warning
+          team: autoguard
+        annotations:
+          summary: "Geofence violations spike detected"
+          description: "{{ $value }} violations/s in the last 5 minutes."
+
+      - alert: FatigueAlertRateHigh
+        expr: rate(autoguard_fatigue_alerts_total[5m]) > 5
+        for: 2m
+        labels:
+          severity: critical
+          team: autoguard
+        annotations:
+          summary: "Unusual number of driver fatigue alerts"
+          description: "{{ $value }} fatigue alerts/s detected."
+
+      - alert: ModelDriftDetected
+        expr: increase(autoguard_drift_events_total[10m]) > 0
+        for: 0m
+        labels:
+          severity: warning
+          team: autoguard
+        annotations:
+          summary: "Model drift detected"
+          description: "A drift event was detected in the last 10 minutes."
+
+  - name: autoguard.infra
+    rules:
+      - alert: PodNotReady
+        expr: kube_pod_status_ready{namespace="autoguard", condition="true"} == 0
+        for: 5m
+        labels:
+          severity: critical
+          team: autoguard
+        annotations:
+          summary: "AutoGuard pod not ready"
+          description: "Pod {{ $labels.pod }} has been unready for 5 minutes."
+
+      - alert: HighCPUUsage
+        expr: |
+          sum(rate(container_cpu_usage_seconds_total{namespace="autoguard"}[5m]))
+          / sum(kube_pod_container_resource_limits{namespace="autoguard", resource="cpu"}) > 0.85
+        for: 10m
+        labels:
+          severity: warning
+          team: autoguard
+        annotations:
+          summary: "CPU usage exceeds 85% of limit"
+          description: "CPU utilization at {{ $value | humanizePercentage }}."
+
+      - alert: HighMemoryUsage
+        expr: |
+          sum(container_memory_working_set_bytes{namespace="autoguard"})
+          / sum(kube_pod_container_resource_limits{namespace="autoguard", resource="memory"}) > 0.85
+        for: 10m
+        labels:
+          severity: warning
+          team: autoguard
+        annotations:
+          summary: "Memory usage exceeds 85% of limit"
+          description: "Memory utilization at {{ $value | humanizePercentage }}."

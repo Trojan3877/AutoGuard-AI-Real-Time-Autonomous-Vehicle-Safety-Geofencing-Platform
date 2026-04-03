@@ -1,0 +1,12 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: autoguard-pdb
+  namespace: autoguard
+  labels:
+    app: autoguard-api
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: autoguard-api

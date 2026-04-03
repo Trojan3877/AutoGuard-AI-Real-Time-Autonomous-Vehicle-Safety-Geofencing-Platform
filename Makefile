@@ -1,4 +1,6 @@
-.PHONY: help install dev-api dev-dashboard dev-grpc test coverage lint format clean
+.PHONY: help install dev-api dev-dashboard dev-grpc dev-ws infra-up infra-down \
+        test coverage lint format clean build-cpp helm-lint helm-template \
+        k8s-apply generate-data train-rl
 
 PYTHON ?= python3
 PYTHONPATH ?= .
@@ -30,14 +32,27 @@ infra-down:      ## Stop all docker-compose services
 test:            ## Run the test suite
 	PYTHONPATH=$(PYTHONPATH) pytest tests/ -v
 
-coverage:        ## Run tests with coverage report
-	PYTHONPATH=$(PYTHONPATH) coverage run -m pytest tests/ && coverage report
+coverage:        ## Run tests with coverage report (fail under 60%)
+	PYTHONPATH=$(PYTHONPATH) coverage run -m pytest tests/ && coverage report --fail-under=60
 
 lint:            ## Lint Python code with flake8
 	flake8 apps/ services/ libs/ scripts/ tests/ --max-line-length=120
 
 format:          ## Format Python code with black
 	black apps/ services/ libs/ scripts/ tests/
+
+build-cpp:       ## Compile the C++ risk engine shared library
+	cmake -S libs/risk-engine-cpp -B libs/risk-engine-cpp/build -DCMAKE_BUILD_TYPE=Release
+	cmake --build libs/risk-engine-cpp/build --parallel
+
+helm-lint:       ## Lint the Helm chart
+	helm lint infra/helm/autoguard
+
+helm-template:   ## Render the Helm templates (dry-run)
+	helm template autoguard infra/helm/autoguard
+
+k8s-apply:       ## Apply standalone K8s manifests to current context
+	kubectl apply -f infra/k8s/
 
 generate-data:   ## Generate synthetic vehicle dataset
 	PYTHONPATH=$(PYTHONPATH) $(PYTHON) scripts/generate_data.py
@@ -49,3 +64,4 @@ clean:           ## Remove build / cache artefacts
 	find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true
 	find . -name "*.pyc" -delete
 	rm -rf .coverage htmlcov/ .pytest_cache/
+	rm -rf libs/risk-engine-cpp/build/

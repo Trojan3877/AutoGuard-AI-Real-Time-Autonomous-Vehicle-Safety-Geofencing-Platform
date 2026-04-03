@@ -1,0 +1,134 @@
+# Default values for autoguard.
+# Override per environment with -f values-<env>.yaml
+
+replicaCount: 2
+
+image:
+  repository: trojan3877/autoguard-ai
+  pullPolicy: IfNotPresent
+  tag: ""  # Overridden by CI with the Git tag
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+nameOverride: ""
+fullnameOverride: ""
+
+podAnnotations:
+  prometheus.io/scrape: "true"
+  prometheus.io/port: "8000"
+  prometheus.io/path: "/metrics"
+
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  fsGroup: 2000
+
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop:
+      - ALL
+
+service:
+  type: ClusterIP
+  port: 8000
+  grpcPort: 50051
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+  hosts:
+    # TODO: replace with your actual hostname per environment
+    - host: autoguard.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: autoguard-tls
+      hosts:
+        - autoguard.example.com
+
+resources:
+  limits:
+    cpu: "2"
+    memory: 2Gi
+  requests:
+    cpu: "500m"
+    memory: 512Mi
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 60
+  targetMemoryUtilizationPercentage: 75
+
+livenessProbe:
+  httpGet:
+    path: /health/live
+    port: 8000
+  initialDelaySeconds: 15
+  periodSeconds: 20
+  failureThreshold: 3
+
+readinessProbe:
+  httpGet:
+    path: /health/ready
+    port: 8000
+  initialDelaySeconds: 5
+  periodSeconds: 10
+  failureThreshold: 3
+
+startupProbe:
+  httpGet:
+    path: /health/live
+    port: 8000
+  failureThreshold: 30
+  periodSeconds: 10
+
+env:
+  PYTHONPATH: /app
+  NVIDIA_VISIBLE_DEVICES: all
+  NVIDIA_DRIVER_CAPABILITIES: compute,utility
+  LOG_LEVEL: INFO
+
+envFromSecret:
+  # Kubernetes Secret that provides runtime credentials
+  # Create with: kubectl create secret generic autoguard-secrets --from-env-file=.env
+  secretName: autoguard-secrets
+
+redis:
+  host: redis
+  port: 6379
+
+kafka:
+  bootstrapServers: kafka:9092
+
+pdb:
+  enabled: true
+  minAvailable: 1
+
+networkPolicy:
+  enabled: true
+
+nodeSelector: {}
+tolerations: []
+affinity:
+  podAntiAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        podAffinityTerm:
+          labelSelector:
+            matchExpressions:
+              - key: app.kubernetes.io/name
+                operator: In
+                values:
+                  - autoguard
+          topologyKey: kubernetes.io/hostname
