@@ -9,7 +9,7 @@
 ![Prometheus](https://img.shields.io/badge/Monitoring-Prometheus-orange?logo=prometheus)
 ![License](https://img.shields.io/github/license/Trojan3877/AutoGuard-AI-Real-Time-Autonomous-Vehicle-Safety-Geofencing-Platform)
 ![Last Commit](https://img.shields.io/github/last-commit/Trojan3877/AutoGuard-AI-Real-Time-Autonomous-Vehicle-Safety-Geofencing-Platform)
-
+[![Streamlit App](https://img.shields.io/badge/Streamlit-Live_App-FF4B4B?logo=streamlit&logoColor=white)](YOUR_APP_LINK)
 <img alt="AutoGuard AI architecture diagram" src="https://github.com/user-attachments/assets/23e100bf-9086-4e91-90db-6886e34ec1d6" />
 
 ---
