@@ -1,7 +1,7 @@
-import requests
 import math
+import os
 
-GOOGLE_API_KEY = "YOUR_API_KEY"
+GOOGLE_API_KEY = os.environ.get("GOOGLE_API_KEY", "")
 
 def expand_geofence(center_lat, center_lng, radius_meters):
     """

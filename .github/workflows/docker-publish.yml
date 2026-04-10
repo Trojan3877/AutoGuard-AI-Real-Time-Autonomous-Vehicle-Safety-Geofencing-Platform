@@ -20,9 +20,18 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build and Push
+      - name: Build and Push API image
         uses: docker/build-push-action@v5
         with:
           context: .
+          file: services/api/Dockerfile
           push: true
-          tags: trojan3877/autoguard-ai:${{ github.ref_name }}
+          tags: trojan3877/autoguard-api:${{ github.ref_name }},trojan3877/autoguard-api:latest
+
+      - name: Build and Push Dashboard image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: apps/dashboard/Dockerfile
+          push: true
+          tags: trojan3877/autoguard-dashboard:${{ github.ref_name }},trojan3877/autoguard-dashboard:latest

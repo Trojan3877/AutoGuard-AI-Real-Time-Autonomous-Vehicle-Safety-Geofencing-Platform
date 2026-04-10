@@ -3,13 +3,18 @@
 ![CI](https://github.com/Trojan3877/AutoGuard-AI-Real-Time-Autonomous-Vehicle-Safety-Geofencing-Platform/actions/workflows/ci.yml/badge.svg)
 ![Docker](https://img.shields.io/badge/Docker-GPU_Ready-2496ED?logo=docker&logoColor=white)
 ![Kubernetes](https://img.shields.io/badge/Kubernetes-AutoScaling-326CE5?logo=kubernetes&logoColor=white)
+![Helm](https://img.shields.io/badge/Helm-Deployment-0F1689?logo=helm&logoColor=white)
 ![Kafka](https://img.shields.io/badge/Kafka-Streaming-black?logo=apachekafka)
 ![Redis](https://img.shields.io/badge/Redis-Caching-red?logo=redis)
 ![gRPC](https://img.shields.io/badge/gRPC-High_Performance-blue)
+![WebSockets](https://img.shields.io/badge/WebSocket-RealTime-green)
 ![Prometheus](https://img.shields.io/badge/Monitoring-Prometheus-orange?logo=prometheus)
+![OpenTelemetry](https://img.shields.io/badge/Tracing-OpenTelemetry-5E5CE6)
+![Locust](https://img.shields.io/badge/Load_Testing-Locust-00B894)
+![GPU](https://img.shields.io/badge/GPU-Accelerated-76B900?logo=nvidia)
 ![License](https://img.shields.io/github/license/Trojan3877/AutoGuard-AI-Real-Time-Autonomous-Vehicle-Safety-Geofencing-Platform)
 ![Last Commit](https://img.shields.io/github/last-commit/Trojan3877/AutoGuard-AI-Real-Time-Autonomous-Vehicle-Safety-Geofencing-Platform)
-[![Streamlit App](https://img.shields.io/badge/Streamlit-Live_App-FF4B4B?logo=streamlit&logoColor=white)](YOUR_APP_LINK)
+
 <img alt="AutoGuard AI architecture diagram" src="https://github.com/user-attachments/assets/23e100bf-9086-4e91-90db-6886e34ec1d6" />
 
 ---
@@ -36,10 +41,12 @@ libs/           – shared libraries
   monitoring/       Prometheus metrics, OpenTelemetry tracing
 infra/          – infrastructure-as-code
   k8s/              Kubernetes manifests (HPA)
+  helm/             Helm chart
   terraform/        AWS ECR + EKS provisioning
+  monitoring/       Grafana dashboard + Prometheus alerts
 docs/           – architecture, development guide, structure map
 scripts/        – developer utilities (data generation)
-tests/          – benchmarks and load tests
+tests/          – unit tests, benchmarks and load tests
 ```
 
 See [`docs/structure.md`](docs/structure.md) for the full annotated tree.
@@ -54,6 +61,10 @@ See [`docs/structure.md`](docs/structure.md) for the full annotated tree.
 # Clone
 git clone https://github.com/Trojan3877/AutoGuard-AI-Real-Time-Autonomous-Vehicle-Safety-Geofencing-Platform.git
 cd AutoGuard-AI-Real-Time-Autonomous-Vehicle-Safety-Geofencing-Platform
+
+# Copy and fill in environment variables
+cp .env.example .env
+# Edit .env with your credentials (GOOGLE_API_KEY, Snowflake, etc.)
 
 # Install dependencies
 python3 -m venv .venv && source .venv/bin/activate
@@ -73,6 +84,23 @@ make dev-dashboard
 ```
 
 For a complete guide (env vars, RL training, Docker build, K8s deploy) see [`docs/development.md`](docs/development.md).
+
+---
+
+## Docker Compose (full stack)
+
+```bash
+cp .env.example .env   # fill in your secrets
+docker compose up --build
+```
+
+Services:
+| Service | URL |
+|---|---|
+| FastAPI REST | http://localhost:8000 |
+| API docs (Swagger) | http://localhost:8000/docs |
+| Streamlit dashboard | http://localhost:8501 |
+| gRPC | localhost:50051 |
 
 ---
 
@@ -111,7 +139,23 @@ Sensor Fleet  →  Kafka  →  Perception AI  +  Fatigue AI
 | `libs/simulation/` | Gymnasium RL environments + Stable-Baselines3 PPO training |
 | `libs/monitoring/` | Prometheus counters/histograms, OpenTelemetry tracing |
 | `infra/terraform/` | AWS ECR + EKS cluster provisioning |
-| `infra/k8s/` | Kubernetes HPA manifest |
+| `infra/k8s/` | Kubernetes manifests + HPA |
+| `infra/helm/` | Helm chart for production deployments |
+
+---
+
+## Environment variables
+
+Copy `.env.example` to `.env` and fill in real values before running locally.
+
+| Variable | Description |
+|---|---|
+| `GOOGLE_API_KEY` | Google Maps API key for geofencing |
+| `REDIS_HOST` / `REDIS_PORT` | Redis connection |
+| `KAFKA_BOOTSTRAP_SERVERS` | Kafka broker address(es) |
+| `SNOWFLAKE_*` | Snowflake data-pipeline credentials |
+| `API_BASE_URL` | Base URL the dashboard uses to reach the API (default: `http://localhost:8000`) |
+| `OTEL_EXPORTER_OTLP_ENDPOINT` | OpenTelemetry collector endpoint |
 
 ---
 
@@ -136,20 +180,26 @@ make test      # pytest tests/
 make coverage  # with coverage report
 ```
 
+CI uses `requirements-ci.txt` (lightweight, no heavy GPU packages) so tests run quickly on standard runners.
+
 ---
 
 ## Deployment
 
 ```bash
-# Build API Docker image
+# Build Docker images
 docker build -f services/api/Dockerfile -t autoguard-api .
+docker build -f apps/dashboard/Dockerfile -t autoguard-dashboard .
 
 # Apply Kubernetes manifests
-kubectl apply -f infra/k8s/hpa.yaml
+kubectl apply -f infra/k8s/
 
 # Helm deploy
-helm upgrade --install autoguard ./infra/helm/autoguard
+helm upgrade --install autoguard ./infra/helm/autoguard \
+  --namespace autoguard --create-namespace
 ```
+
+For the full Kubernetes + Terraform workflow see [`docs/development.md`](docs/development.md).
 
 ---
 
@@ -160,136 +210,3 @@ See [`CONTRIBUTING.md`](CONTRIBUTING.md) for branching strategy, commit conventi
 ## License
 
 MIT – see [`LICENSE`](LICENSE).
-
-
-
-
-
-
-<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/23e100bf-9086-4e91-90db-6886e34ec1d6" />
-
-# 🚗 AutoGuard AI – Real-Time Autonomous Vehicle Safety Platform
-
-![CI](https://github.com/Trojan3877/AutoGuard-AI-Real-Time-Autonomous-Vehicle-Safety-Geofencing-Platform/actions/workflows/ci.yml/badge.svg)
-![Docker](https://img.shields.io/badge/Docker-GPU_Ready-2496ED?logo=docker&logoColor=white)
-![Kubernetes](https://img.shields.io/badge/Kubernetes-AutoScaling-326CE5?logo=kubernetes&logoColor=white)
-![Helm](https://img.shields.io/badge/Helm-Deployment-0F1689?logo=helm&logoColor=white)
-![Kafka](https://img.shields.io/badge/Kafka-Streaming-black?logo=apachekafka)
-![Redis](https://img.shields.io/badge/Redis-Caching-red?logo=redis)
-![gRPC](https://img.shields.io/badge/gRPC-High_Performance-blue)
-![WebSockets](https://img.shields.io/badge/WebSocket-RealTime-green)
-![Prometheus](https://img.shields.io/badge/Monitoring-Prometheus-orange?logo=prometheus)
-![OpenTelemetry](https://img.shields.io/badge/Tracing-OpenTelemetry-5E5CE6)
-![Locust](https://img.shields.io/badge/Load_Testing-Locust-00B894)
-![Benchmark](https://img.shields.io/badge/Benchmarking-Enabled-purple)
-![GPU](https://img.shields.io/badge/GPU-Accelerated-76B900?logo=nvidia)
-![A/B Testing](https://img.shields.io/badge/A/B_Testing-Enabled-yellow)
-![Canary](https://img.shields.io/badge/Deployment-Canary-blue)
-![Security](https://img.shields.io/badge/Trivy-Scanned-red)
-![Coverage](https://img.shields.io/badge/Coverage-85%25-brightgreen)
-![License](https://img.shields.io/github/license/Trojan3877/AutoGuard-AI-Real-Time-Autonomous-Vehicle-Safety-Geofencing-Platform)
-![Last Commit](https://img.shields.io/github/last-commit/Trojan3877/AutoGuard-AI-Real-Time-Autonomous-Vehicle-Safety-Geofencing-Platform)
-
-
-
-Architecture Flow
-Synthetic Data Generator
-        ↓
-Kafka Streaming
-        ↓
-Redis Cache
-        ↓
-Transformer + Fatigue CNN
-        ↓
-A/B Routing
-        ↓
-gRPC / REST
-        ↓
-Load Balancer
-        ↓
-OpenTelemetry Tracing
-        ↓
-Prometheus Monitoring
-        ↓
-Kubernetes HPA Scaling
-
-
-
-
- Metrics
-Metric	Value
-Avg REST Latency	72ms
-Avg gRPC Latency	38ms
-Redis Cache Hit Rate	64%
-Max Load (Locust)	1,200 RPS
-HPA Scale Time	<15s
-Drift Sensitivity	0.92
-Collision Reduction	27%
-
-
-
-
-Quick Start
-
-Run Kafka + Redis
-docker-compose up kafka redis
-
-
-Run API
-
-uvicorn api.main:app
-
-
-Run gRPC
-
-python api/grpc_server.py
-
-
-Run Dashboard
-
-
-
-
-Production Features
-
-• Kafka streaming ingestion  
-• Redis caching  
-• GPU acceleration  
-• A/B testing routing  
-• Canary deployments  
-• Kubernetes auto-scaling  
-• Drift detection  
-• Real-time WebSocket dashboard  
-
-
-
-Extended Q&A
-
-Why gRPC?
-High-performance low-latency inference under heavy telemetry load.
-
-Why Redis?
-Prevents duplicate inference calls and reduces compute cost.
-
-Why Canary Deployments?
-Safety-critical systems require gradual rollouts.
-
-Why HPA?
-Vehicle fleets generate variable load patterns requiring dynamic scaling.
-
-How is Drift Managed?
-KS-test monitoring with Prometheus alerts.
-
-
-
-Roadmap
-
-• Multi-region deployment  
-• Federated learning  
-• Edge device inference  
-• GPU autoscaling  
-• Production SLO monitoring  
-
-
-
-
