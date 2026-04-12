@@ -102,13 +102,13 @@ async def predict(body: TelemetryRequest):
     The geofence check is I/O-bound (external HTTP call) and is offloaded to a
     thread-pool executor so the async event loop is never blocked.
     """
-    t0 = time.perf_counter()
+    start_time = time.perf_counter()
     request_counter.inc()
     try:
         geofence_valid = await asyncio.to_thread(check_geofence, body.lat, body.lon)
     except Exception as exc:
         raise HTTPException(status_code=502, detail=f"Geofence check failed: {exc}") from exc
-    latency_s = time.perf_counter() - t0
+    latency_s = time.perf_counter() - start_time
     INFERENCE_LATENCY.observe(latency_s)
     latency_ms = round(latency_s * 1000, 3)
     return PredictionResponse(

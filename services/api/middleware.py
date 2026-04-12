@@ -21,7 +21,7 @@ def configure_logging(level: str = "INFO") -> None:
     )
 
     class _JsonFormatter(logging.Formatter):
-        def format(self, record: logging.LogRecord) -> str:  # noqa: A003
+        def format(self, record: logging.LogRecord) -> str:
             payload = {
                 "ts": self.formatTime(record, self.datefmt),
                 "level": record.levelname,
