@@ -32,8 +32,8 @@ infra-down:      ## Stop all docker-compose services
 test:            ## Run the test suite
 	PYTHONPATH=$(PYTHONPATH) pytest tests/ -v
 
-coverage:        ## Run tests with coverage report (fail under 60%)
-	PYTHONPATH=$(PYTHONPATH) coverage run -m pytest tests/ && coverage report --fail-under=60
+coverage:        ## Run tests with coverage report (fail under 80%)
+	PYTHONPATH=$(PYTHONPATH) coverage run -m pytest tests/ && coverage report --fail-under=80
 
 lint:            ## Lint Python code with flake8
 	flake8 apps/ services/ libs/ scripts/ tests/ --max-line-length=120

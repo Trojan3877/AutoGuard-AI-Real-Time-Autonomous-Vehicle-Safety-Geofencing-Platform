@@ -1,15 +1,34 @@
+import asyncio
 import time
 
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import PlainTextResponse
+from prometheus_client import generate_latest, CONTENT_TYPE_LATEST
 from pydantic import BaseModel, Field
+
+from .config import settings
 from .geofence import check_geofence
-from libs.monitoring.prometheus_metrics import REQUEST_COUNT as request_counter
+from .middleware import (
+    GlobalExceptionMiddleware,
+    RequestLoggingMiddleware,
+    configure_logging,
+)
+from libs.monitoring.prometheus_metrics import (
+    REQUEST_COUNT as request_counter,
+    INFERENCE_LATENCY,
+)
+
+configure_logging(settings.log_level)
 
 app = FastAPI(
     title="AutoGuard AI",
     description="Real-Time Autonomous Vehicle Safety & Geofencing Platform",
     version="0.1.0",
 )
+
+# Register middleware (outermost first)
+app.add_middleware(GlobalExceptionMiddleware)
+app.add_middleware(RequestLoggingMiddleware)
 
 _START_TIME = time.time()
 
@@ -42,7 +61,7 @@ class HealthResponse(BaseModel):
 
 @app.get("/health", response_model=HealthResponse, tags=["health"])
 @app.get("/health/live", response_model=HealthResponse, tags=["health"])
-def liveness():
+async def liveness():
     """Kubernetes liveness probe – confirms the process is alive."""
     return HealthResponse(
         status="alive",
@@ -51,7 +70,7 @@ def liveness():
 
 
 @app.get("/health/ready", response_model=HealthResponse, tags=["health"])
-def readiness():
+async def readiness():
     """Kubernetes readiness probe – confirms the service can handle traffic."""
     return HealthResponse(
         status="ready",
@@ -60,19 +79,38 @@ def readiness():
 
 
 # ---------------------------------------------------------------------------
+# Prometheus metrics scrape endpoint
+# ---------------------------------------------------------------------------
+
+@app.get("/metrics", response_class=PlainTextResponse, tags=["observability"])
+async def metrics():
+    """Expose Prometheus metrics for scraping by a Prometheus server."""
+    return PlainTextResponse(
+        content=generate_latest().decode("utf-8"),
+        media_type=CONTENT_TYPE_LATEST,
+    )
+
+
+# ---------------------------------------------------------------------------
 # Inference endpoint
 # ---------------------------------------------------------------------------
 
 @app.post("/predict", response_model=PredictionResponse, tags=["inference"])
-def predict(body: TelemetryRequest):
-    """Validate vehicle telemetry against the active geofence and run inference."""
-    t0 = time.time()
+async def predict(body: TelemetryRequest):
+    """Validate vehicle telemetry against the active geofence and run inference.
+
+    The geofence check is I/O-bound (external HTTP call) and is offloaded to a
+    thread-pool executor so the async event loop is never blocked.
+    """
+    start_time = time.perf_counter()
     request_counter.inc()
     try:
-        geofence_valid = check_geofence(body.lat, body.lon)
+        geofence_valid = await asyncio.to_thread(check_geofence, body.lat, body.lon)
     except Exception as exc:
         raise HTTPException(status_code=502, detail=f"Geofence check failed: {exc}") from exc
-    latency_ms = round((time.time() - t0) * 1000, 3)
+    latency_s = time.perf_counter() - start_time
+    INFERENCE_LATENCY.observe(latency_s)
+    latency_ms = round(latency_s * 1000, 3)
     return PredictionResponse(
         vehicle_id=body.vehicle_id,
         geofence_valid=geofence_valid,
