@@ -4,24 +4,54 @@ on:
   push:
     branches: [ main ]
   pull_request:
+    branches: [ main ]
 
 jobs:
   sonar:
     name: SonarCloud Scan
     runs-on: ubuntu-22.04
 
-    steps:
-      - uses: actions/checkout@v4
+    permissions:
+      contents: read        # required to checkout the repository
+      pull-requests: read   # required for PR decoration
 
-      - uses: actions/setup-python@v5
+    steps:
+      # fetch-depth: 0 is REQUIRED by SonarCloud to access the full git history
+      # for blame information and accurate new-code detection.
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
           python-version: "3.10"
 
-      - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
+      # Use the lightweight CI requirements to avoid installing heavy GPU/ML
+      # packages (torch, stable-baselines3, etc.) that are not needed here.
+      - name: Install CI dependencies
+        run: pip install -r requirements-ci.txt
+
+      # Run the test suite under coverage. The step is allowed to fail so that
+      # the coverage XML is always generated and Sonar still receives data even
+      # when individual tests are broken.
+      - name: Run tests with coverage
+        run: PYTHONPATH=. coverage run -m pytest tests/ -v
+        continue-on-error: true
+
+      # Always generate the XML report regardless of test-step outcome so that
+      # SonarCloud can display coverage data and apply its Quality Gate rules.
+      - name: Export coverage report
+        run: coverage xml -o coverage.xml
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v2
         env:
+          # SONAR_TOKEN must be set as a GitHub Actions secret.
+          # GitHub → Settings → Secrets and variables → Actions → New repository secret
+          # Name:  SONAR_TOKEN
+          # Value: token from https://sonarcloud.io/account/security
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          # GITHUB_TOKEN allows SonarCloud to post PR decoration comments.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
