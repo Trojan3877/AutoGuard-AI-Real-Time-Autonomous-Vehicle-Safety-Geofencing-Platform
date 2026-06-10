@@ -22,7 +22,7 @@
 ![License](https://img.shields.io/github/license/Trojan3877/AutoGuard-AI-Real-Time-Autonomous-Vehicle-Safety-Geofencing-Platform?style=flat-square)
 ![Last Commit](https://img.shields.io/github/last-commit/Trojan3877/AutoGuard-AI-Real-Time-Autonomous-Vehicle-Safety-Geofencing-Platform?style=flat-square)
 ![Repo Status](https://img.shields.io/badge/Status-Active%20Development-blueviolet?style=flat-square)
-
+https://autoguard-ai-real-time-autonomous-vehicle-safety-geofencing-pl.streamlit.app/
 <img alt="AutoGuard AI architecture diagram" src="https://github.com/user-attachments/assets/23e100bf-9086-4e91-90db-6886e34ec1d6" />
 
 ---
