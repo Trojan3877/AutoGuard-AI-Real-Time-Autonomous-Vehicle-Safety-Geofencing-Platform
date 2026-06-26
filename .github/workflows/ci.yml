@@ -1,4 +1,4 @@
-name: AutoGuard CI
+Name: AutoGuard CI
 
 on:
   push:
@@ -78,4 +78,3 @@ jobs:
           tags: autoguard-api:ci
           cache-from: type=gha
           cache-to: type=gha,mode=max
-
