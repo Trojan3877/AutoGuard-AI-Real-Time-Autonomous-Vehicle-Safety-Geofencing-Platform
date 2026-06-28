@@ -1,18 +1,5 @@
-# 🛡️ AutoGuard-AI: Autonomous Vehicle Real-Time Safety & Geofencing Platform
+[![CI](https://img.shields.io/github/actions/workflow/status/Trojan3877/DeepSequence-Recommender/ci.yml?branch=main&style=flat-square&logo=github-actions&logoColor=white&label=CI&v=7)](https://github.com/Trojan3877/DeepSequence-Recommender/actions) ![Python Version](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12-3776AB?style=flat-square&logo=python&logoColor=white) ![Serialization](https://img.shields.io/badge/Serialization-ONNX%20Runtime%20v1.17-6366F1?style=flat-square) ![Serving](https://img.shields.io/badge/Serving-Triton%20Inference%20Server-76B900?style=flat-square&logo=nvidia&logoColor=white) ![Code Style](https://img.shields.io/badge/code%20style-black-000000?style=flat-square) ![Model Family](https://img.shields.io/badge/Model-Sequential_RNN_%7C_Transformer-0052CC?style=flat-square) ![Pipeline Context](https://img.shields.io/badge/Pipeline-Bounded_Inference_State-3670A0?style=flat-square&logo=pydantic&logoColor=white) ![Guardrails](https://img.shields.io/badge/Guardrails-Latency_SLA_Breaker-D32F2F?style=flat-square) ![Type Checking](https://img.shields.io/badge/type%20checking-mypy-2F5597?style=flat-square) ![Security Scan](https://img.shields.io/badge/security-bandit%20passed-059669?style=flat-square) ![Inference SLA Metrics](https://img.shields.io/badge/Inference_SLA-p99_%3C_50ms-blueviolet?style=flat-square) ![System Throughput Metrics](https://img.shields.io/badge/Throughput-12k_reqs%2Fsec-orange?style=flat-square)
 
-<p align="left">
-  <a href="https://github.com/Trojan3877/AutoGuard-AI-Real-Time-Autonomous-Vehicle-Safety-Geofencing-Platform/actions">
-    <img src="https://img.shields.io/github/actions/workflow/status/Trojan3877/AutoGuard-AI-Real-Time-Autonomous-Vehicle-Safety-Geofencing-Platform/ci.yml?branch=main&style=flat-square&logo=github-actions&logoColor=white&label=CI&v=4" alt="Build Status">
-  </a>
-  <img src="https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python Version">
-  <img src="https://img.shields.io/badge/coverage-95%25-059669?style=flat-square&logo=pytest&logoColor=white" alt="Code Coverage">
-  <img src="https://img.shields.io/badge/code%20style-black-000000?style=flat-square" alt="Code Style">
-  <img src="https://img.shields.io/badge/Architecture-Supervisor--Worker%20Agents-0052CC?style=flat-square" alt="Architecture Core">
-  <img src="https://img.shields.io/badge/Data_Contract-Immutable_Telemetry_State-3670A0?style=flat-square&logo=pydantic&logoColor=white" alt="Data Contract Context">
-  <img src="https://img.shields.io/badge/Safety_SLA-Hard_Sub--5ms_Limit-D32F2F?style=flat-square" alt="Safety SLA Bounds">
-  <img src="https://img.shields.io/badge/type%20checking-mypy-2F5597?style=flat-square" alt="Type Checking System">
-  <img src="https://img.shields.io/badge/security-bandit%20passed-059669?style=flat-square" alt="Security State">
-</p>
 
 AutoGuard-AI is an event-driven, hard real-time safety co-processing engine designed for autonomous vehicle control units. The platform coordinates distributed geospatial validation processes by splitting them into specialized **Supervisor and Edge Worker Agents**. Using **Immutable Telemetry Context tracking objects** protected by a sub-5ms hard hardware execution circuit breaker, it prevents cascading runtime failures from delaying vehicle safety overrides.
 
