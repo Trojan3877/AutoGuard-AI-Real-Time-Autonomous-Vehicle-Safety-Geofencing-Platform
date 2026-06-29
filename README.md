@@ -37,7 +37,10 @@ AutoGuard-AI decouples real-time geographic calculation and threat evaluation in
 2. **Parallel Task Processing:** The Safety Supervisor delegates geospatial containment checking and collision-horizon math to isolated worker threads simultaneously.
 3. **Hardware Override Fail-Safe:** An active monitoring loop tracks internal processing speeds down to the microsecond. If an edge worker hangs due to an unhandled geometric exception, the circuit breaker triggers instantly ($<5\text{ms}$), bypassing normal logic to engage maximum physical mechanical braking.
 
----
+docs/
+
+architecture.png
+
 
 ## 📊 Operational System Performance Benchmarks
 
