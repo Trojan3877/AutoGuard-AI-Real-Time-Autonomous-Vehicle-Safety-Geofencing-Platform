@@ -89,7 +89,15 @@ pytest --cov=.
 ---
 
 ## 📊 Performance Metrics
-
-<!-- The metrics script will dynamically insert your code stats directly under this line -->
+### 📈 Summary Stats
+## 📊 Performance Metrics
+| Operational Dimension | Repository System Metric Value |
+| :--- | :--- |
+| **Total Tracked Code Architecture Files** | 84 files |
+| **Total Production Invariant Lines** | 2990 LOC |
+| **Subsystem Module: `infra` Volume** | 899 LOC |
+| **Subsystem Module: `tests` Volume** | 361 LOC |
+| **Subsystem Module: `services` Volume** | 341 LOC |
+| **Subsystem Module: `docs` Volume** | 304 LOC |
 
 ### 📈 Summary Stats
