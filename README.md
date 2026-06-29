@@ -86,4 +86,10 @@ pytest --cov=.
 ​At highway speeds (around 70\text{mph} / 112\text{km/h}), a vehicle covers roughly 102\text{ft} (31\text{m}) every second. This means it travels over 6 inches (15cm) every single millisecond.
 ​If a safety processing loop takes 50\text{ms} to analyze a hazard, the vehicle travels another 25 feet before even beginning to brake. A hard 5\text{ms} processing ceiling ensures the vehicle moves no more than 2.5 feet before taking corrective action. If the system struggles to compute a clear path within this micro-window, the circuit breaker stops processing and instantly engages the emergency mechanical brakes.
 
+---
 
+## 📊 Performance Metrics
+
+<!-- The metrics script will dynamically insert your code stats directly under this line -->
+
+### 📈 Summary Stats
